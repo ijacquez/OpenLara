@@ -2737,7 +2737,7 @@ struct Lara : ItemObj
             if (keys & IK_L) input |= IN_LOOK;
             if (keys & IK_R) input |= IN_WALK;
         }
-    #elif defined(__32X__)
+    #elif defined(__32X__) || defined(__SATURN__)
         // 6 buttons
         if (keys & IK_A) input |= IN_WEAPON;
         if (keys & IK_B) input |= IN_ACTION;

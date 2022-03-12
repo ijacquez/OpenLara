@@ -1,7 +1,7 @@
 #ifndef H_COMMON
 #define H_COMMON
 //#define STATIC_ITEMS
-#define PROFILING
+// #define PROFILING
 #ifdef PROFILING
     #define STATIC_ITEMS
     #define PROFILE_FRAMETIME
@@ -99,6 +99,17 @@
     #define FRAME_HEIGHT 224
 
     #include "32x.h"
+#elif defined(__SATURN__)
+    #define USE_DIV_TABLE
+    #define CPU_BIG_ENDIAN
+    #define ROM_READ
+    #define TEX_2PX
+
+    #define MODE13
+    #define FRAME_WIDTH  320
+    #define FRAME_HEIGHT 224
+
+    #include "ss.h"
 #else
     #error unsupported platform
 #endif
@@ -151,7 +162,7 @@
     #define FAST_HITMASK
 #endif
 
-#ifdef __32X__
+#if defined(__32X__) || defined(__SATURN__)
 // hide dead enemies after a while to reduce the number of polygons on the screen
     #define HIDE_CORPSES (30*10) // 10 sec
 // replace trap flor geometry by two flat quads in the static state
@@ -229,7 +240,7 @@ X_INLINE int32 abs(int32 x) {
 
 #if defined(__GBA__) || defined(__NDS__) || defined(__32X__)
     #define int2str(x,str) itoa(x, str, 10)
-#elif defined(__3DO__)
+#elif defined(__3DO__) || defined(__SATURN__)
     #define int2str(x,str) sprintf(str, "%d", x)
 #elif defined(__TNS__)
     #define int2str(x,str) __itoa(x, str, 10)
@@ -270,6 +281,8 @@ X_INLINE int32 abs(int32 x) {
 #elif defined(__TNS__)
     extern uint16 fb[VRAM_WIDTH * FRAME_HEIGHT];
 #elif defined(__DOS__)
+    extern uint16 fb[VRAM_WIDTH * FRAME_HEIGHT];
+#elif defined(__SATURN__)
     extern uint16 fb[VRAM_WIDTH * FRAME_HEIGHT];
 #endif
 
@@ -324,7 +337,7 @@ extern void* osLoadLevel(const char* name);
 
     extern uint32 gCounters[CNT_MAX];
     
-    #if defined(__3DO__) || defined(__32X__) // should be first, armcpp bug (#elif)
+    #if defined(__3DO__) || defined(__32X__) || defined(__SATURN__) // should be first, armcpp bug (#elif)
         extern int32 g_timer;
 
         #define PROFILE_START() {\
@@ -2692,7 +2705,7 @@ vec3i boxPushOut(const AABBi &a, const AABBi &b);
     void flush_c();
 #endif
 
-#ifdef __32X__ // TODO
+#if defined(__32X__) || defined(__SATURN__) // TODO
     #undef matrixPush
     #undef matrixSetIdentity
     #undef matrixSetBasis

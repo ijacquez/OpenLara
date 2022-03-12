@@ -44,6 +44,8 @@ EWRAM_DATA ExtraInfoLara playersExtra[MAX_PLAYERS];
 
 #ifdef __3DO__ // TODO fix the title scren on 3DO
 EWRAM_DATA LevelID gLevelID = LVL_TR1_1;
+#elif __SATURN__ // TODO fix the title scren on 3DO
+EWRAM_DATA LevelID gLevelID = LVL_TR1_TITLE;
 #else
 EWRAM_DATA LevelID gLevelID = LVL_TR1_1;
 #endif
@@ -1580,6 +1582,9 @@ void dmaFill(void* dst, uint8 value, uint32 count)
     dma3_fill(dst, v, count);
 #elif defined(__32X__)
     fast_memset(dst, value, count >> 2);
+#elif defined(__SATURN__)
+    // XXX: Use CPU-DMAC
+    memset(dst, value, count);
 #else
     memset(dst, value, count);
 #endif
